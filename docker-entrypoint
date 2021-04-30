@@ -26,6 +26,7 @@ fi
 sed -i "s/#PermitRootLogin.*/PermitRootLogin without-password/" /etc/ssh/sshd_config
 sed -i "s/#PasswordAuthentication.*/PasswordAuthentication no/" /etc/ssh/sshd_config
 sed -i "s/GatewayPorts.*/GatewayPorts yes/" /etc/ssh/sshd_config
+sed -i "s/AllowTcpForwarding.*/AllowTcpForwarding yes/" /etc/ssh/sshd_config
 
 chmod 700 /root/.ssh
 chmod 600 /root/.ssh/authorized_keys
