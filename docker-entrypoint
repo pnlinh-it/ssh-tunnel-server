@@ -1,0 +1,34 @@
+#!/bin/sh
+
+ROOT_PASSWORD="$(hexdump -e '"%02x"' -n 16 /dev/urandom)"
+echo "root:${ROOT_PASSWORD}" | chpasswd >/dev/null 2>&1
+
+if [ ! -f "/etc/ssh/ssh_host_rsa_key" ]; then
+  ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+fi
+
+if [ ! -f "/etc/ssh/ssh_host_dsa_key" ]; then
+  ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
+fi
+
+mkdir -p ~/.ssh
+if [ ! -f ~/.ssh/authorized_keys ]; then
+  touch ~/.ssh/authorized_keys
+fi
+
+if [ -n "$PUBLIC_KEY" ]; then
+  echo "$PUBLIC_KEY" >>/root/.ssh/authorized_keys
+  echo "Added public key"
+else
+  echo "Has no public key"
+fi
+
+sed -i "s/#PermitRootLogin.*/PermitRootLogin without-password/" /etc/ssh/sshd_config
+sed -i "s/#PasswordAuthentication.*/PasswordAuthentication no/" /etc/ssh/sshd_config
+sed -i "s/GatewayPorts.*/GatewayPorts yes/" /etc/ssh/sshd_config
+
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/authorized_keys
+chown root:root -R ~/.ssh
+
+exec "$@"
