@@ -1,3 +1,5 @@
+![Untitled](https://user-images.githubusercontent.com/11713395/116752818-4fdd7e00-aa30-11eb-9a35-54a7640967d8.png)
+
 ### Create ssh key-pair and environment file
 - Run `ssh-keygen`
 - Enter your key name.
